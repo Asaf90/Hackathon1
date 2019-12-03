@@ -142,3 +142,4 @@ ylabel('Power Density')
 %% Phase 8: Optical amplifier
 
 
+i = 0;
