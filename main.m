@@ -101,26 +101,56 @@ for i = 1:3
     leakage4 = leakage4 + p(length(p));
 end
 
+
 %% Phase 3: Tone response of laser
 % t = -5:0.01:5;          %time vector
-w = 1e3;                %sqrt of resonance freq.
-f = 1e9;                %sin frequency
-alpha = 1;              %dampening rate
-% syms y(t)
-% Dy = diff(y);
-% ode = diff(y,t,2) == -alpha*Dy - w*y + sin(w*t);
-% cond1 = y(0) == 0;
-% cond2 = Dy(0) == 1;
-% 
-% conds = [cond1 cond2];
-% ySol(y) = dsolve(ode,conds);
-% ySol = simplify(ySol);
+f = 1e9;                  %sin frequency
+w = 2*pi*10^9;            %sqrt of resonance freq.
+
+% Over Damped, Critically Damped, Under Damped
+alpha = [0.1*w w 10*w];              %dampening rate
+syms y(t)
+Dy = diff(y);
+figure()
+for n = 1:3
+ode = diff(y,t,2) == -(2*alpha(n))*Dy - (w^2)*y + (1e-3)*sin(2*pi*f*t);
+cond1 = y(0) == 0;
+cond2 = Dy(0) == 1;
+
+conds = [cond1 cond2];
+ySol = dsolve(ode,conds);
+ySol = simplify(ySol);
 
 
+yFunc(t) = ySol(1);
+dt = 0:0.01:10-0.01;
+y_vect = zeros(1,length(dt));
+
+i = 1;
+for dt_ = dt
+    y_vect(1,i) = double(yFunc(dt_));
+    i = i+1;
+end
+
+plot(y_vect)
+hold on
+legend ('\alpha_1', '\alpha_2', '\alpha_3')
+xlabel('Time [sec]')
+ylabel('Spectral Bandwidth')
+title('Tone response of laser')
+end
+
+close all
 %% Phase 4: Gaussian beam propagation
 lambda4 = 1e-6;
-n = 1.6;
-omega = 1e-3;
+n = 1.6;        
+w0 = 1e-3;                      % Waist size of Laser beam
+z0 = (pi*(w0^2)*n)/lambda4;     % Rayleigh Range
+w_z = (w0^2)*(1+(z/z0)^2);      % Radis ar which the field amp. and intensity drop to 1/e and 1/e^2 of axial values
+I0 = 1;                         % Scaled Power Intensity
+
+I = I0*((w0/w_z)^2)*exp(-2*((r/w_z)^2));
+
 
 %% Phase 5: Lamebrain light source
 theta = -pi:pi/100:pi;
@@ -145,4 +175,3 @@ ylabel('Power Density')
 %% Phase 8: Optical amplifier
 
 
-i = 0;
