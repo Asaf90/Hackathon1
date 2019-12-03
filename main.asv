@@ -162,8 +162,7 @@ VSolFun = matlabFunction(VSol);
 fplot(VSolFun(t),[0,500]) 
 title('Solutions of second order ODE for different dampenings')
 xlabel('Time [sec]')
-ylabel('Amplitude')
-legend('Underdamped', 'Critically Damped', 'Overdamped')
+
 
 %% Phase 4: Gaussian beam propagation
 z_vec = 0:600;
@@ -183,8 +182,7 @@ for constant = 100:100:1500
 end
 title('R(z) for I(R,Z) = Constant');
 legend('100','200','300','400','500','600','700','800','900','1000','1100','1200','1300','1400','1500');
-xlabel('z [m]')
-ylabel('Constant ratio')
+
 
 
 %% Phase 5: Lamebrain light source
