@@ -106,43 +106,54 @@ end
 
 
 %% Phase 3: Tone response of laser
-% % t = -5:0.01:5;          %time vector
-% f = 1e9;                  %sin frequency
-% w = 2*pi*10^9;            %sqrt of resonance freq.
-% 
-% % Over Damped, Critically Damped, Under Damped
-% alpha = [0.1*w w 10*w];              %dampening rate
-% syms y(t)
-% Dy = diff(y);
-% figure()
-% for n = 1:3
-% ode = diff(y,t,2) == -(2*alpha(n))*Dy - (w^2)*y + sin(2*pi*f*t);
-% cond1 = y(0) == 0;
-% cond2 = Dy(0) == 1;
-% 
-% conds = [cond1 cond2];
-% ySol = dsolve(ode,conds);
-% ySol = simplify(ySol);
-% 
-% 
-% yFunc(t) = ySol(1);
-% dt = 0:0.01:10-0.01;
-% y_vect = zeros(1,length(dt));
-% 
-% i = 1;
-% for dt_ = dt
-%     y_vect(1,i) = double(yFunc(dt_));
-%     i = i+1;
-% end
-% 
-% plot(y_vect)
-% hold on
-% legend ('\alpha_1', '\alpha_2', '\alpha_3')
-% xlabel('Time [sec]')
-% ylabel('Spectral Bandwidth')
-% title('Tone response of laser')
-% end
+alpha_0 = [1 2 5] ;
+w_o = [5 2 1];
+freq = 1*10^9;
 
+t= 0:0.01:500;
+
+syms V(t)
+Vt = diff(V);
+ode = diff(V,t,2)+diff(0.01*V,t,1)+ diff(0.05*V,t,0) == sin(2*pi*(10^9)*t);
+cond1 = V(0) == 0;
+cond2 = Vt(0) == 0;
+
+
+conds = [cond1 cond2];
+VSol(t) = dsolve(ode,conds);
+VSol = simplify(VSol);
+VSolFun = matlabFunction(VSol);
+figure();
+fplot(VSolFun(t),[0,500]); title('Under Damped');
+
+syms V(t)
+Vt = diff(V);
+ode = diff(V,t,2)+diff(0.025*V,t,1)+ diff(double(1/1600)*V,t,0) == sin(2*pi*(10^9)*t);
+cond1 = V(0) == 0;
+cond2 = Vt(0) == 0;
+
+
+conds = [cond1 cond2];
+VSol(t) = dsolve(ode,conds);
+VSol = simplify(VSol);
+VSolFun = matlabFunction(VSol);
+figure();
+fplot(VSolFun(t),[0,500]); title('Critically Damped');
+
+syms V(t)
+Vt = diff(V);
+ode = diff(V,t,2)+diff(0.05*V,t,1)+ diff(0.001*V,t,0) == sin(2*pi*(10^9)*t);
+cond1 = V(0) == 0;
+cond2 = Vt(0) == 0;
+
+
+conds = [cond1 cond2];
+VSol(t) = dsolve(ode,conds);
+
+VSol = simplify(VSol);
+VSolFun = matlabFunction(VSol);
+figure();
+fplot(VSolFun(t),[0,500]); title('Over Damped');
 
 %% Phase 4: Gaussian beam propagation
 % lambda4 = 1e-6;
@@ -155,6 +166,28 @@ end
 % I0 = 1;                         % Scaled Power Intensity
 % 
 % I = I0*((w0/w_z)^2)*exp(-2*((r/w_z)^2));
+
+z_vec=-600:1:600;
+lambda=1*10^-6;
+n=1.6;
+W0=1*10^-3;
+z0 = pi*W0^2/lambda;
+I0 =1;
+% W = @(z) (((W0^2).*(1+(z./z0).^2)).^0.5);
+legend_arg = [];
+figure();
+for CONST = 0:100:1500
+%     CONST =1;
+    R = @(z) ((0.5*(((W0^2).*(1+(z./z0).^2)).^0.5).^2).*(log(CONST*((((W0^2).*(1+(z./z0).^2)).^0.5).^2).*(W0^-2)))).^(0.5);
+    plot(R(z_vec));
+    hold on;
+%     legend_arg =legend_arg+[] ,num2str(CONST)];
+    
+    
+end
+title('R(z) for I(R,Z)=CONST');
+legend('0','100','200','300','400','500','600','700','800','900','1000','1100','1200','1300','1400','1500');
+
 
 
 %% Phase 5: Lamebrain light source
