@@ -170,8 +170,25 @@ ylabel('Power Density')
 
 %% Phase 6: VLC system
 
+x = -4:4;
+y = -4:4;
+height = 3;
 
+[X, Y] = meshgrid(x,y);
 
+distances = sqrt(X.^2 + Y.^2);
+angles = atan(distances/height);
+
+Noise = 0;
+
+for i = 1:9
+   for j = 1:9
+      Noise = Noise + cos(abs(angles(i,j))) ;
+   end
+end
+Noise = Noise - cos(abs(angles(5,5)));
+
+SNIR = 1/Noise;
 
 %% Phase 7: Modulation
 t = 0:0.1:100;

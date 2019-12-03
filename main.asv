@@ -170,7 +170,22 @@ ylabel('Power Density')
 
 %% Phase 6: VLC system
 
+x = -4:4;
+y = -4:4;
+height = 3;
 
+[X, Y] = meshgrid(x,y);
+
+distances = sqrt(X.^2 + Y.^2);
+angles = atan(distances/height);
+
+I = 0;
+
+for i = 1:9
+   for j = 1:9
+      I = I + cos(absangles(i,j)) 
+   end
+end
 
 
 %% Phase 7: Modulation
@@ -191,14 +206,14 @@ mesh(MachZender)
 Gain_dB = [5 10 20 -10];
 GainAmp = 10.^(Gain_dB./10);
 n_sp = 5;
-AmpNum = 1:100;
+AmpNum = 1:10;
 Fn_Total = zeros(length(AmpNum),1);
 Fn_Total_Atten = zeros(length(AmpNum),1);
 figure()
 hold on
 for i = 1:3
-    Fn = 2*((GainAmp(i)-1)*n_sp) / GainAmp(i);
-    Fn_Atten = 2*;((GainAmp(4)-1)*n_sp) / GainAmp(4);
+    Fn = 2*n_sp;
+    Fn_Atten = 2*n_sp;
     Fn_Total(1,1) = Fn;
     Fn_Total_Atten(1,1) =  Fn_Total(1,1) + (Fn_Atten-1)/((GainAmp(4)));
     for n = 2:length(AmpNum)
@@ -206,6 +221,7 @@ for i = 1:3
         Fn_Total_Atten(n,1) =  Fn_Total(n,1) + (Fn_Atten-1)/((GainAmp(4)));
     end
     plot(AmpNum,Fn_Total_Atten)
+    ylim([0 110])
 end
 
 
