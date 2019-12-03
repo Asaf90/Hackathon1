@@ -87,11 +87,13 @@ for i = 2:4
 end
 leakage2 = 0;
 for i = [1 3 4]
-    
+    p = cdf(pd(i), 2e-7:1e-9:559e-9) - [cdf(pd(i), 2e-7:1e-9:481e-9) zeros(1,559-481)];
+    leakage2 = leakage2 + p(length(p));
 end
 leakage3 = 0;
 for i = [1 2 4]
-    
+    p = cdf(pd(i), 2e-7:1e-9:591e-9) - [cdf(pd(i), 2e-7:1e-9:469e-9) zeros(1,591-469)];
+    leakage3 = leakage3 + p(length(p));    
 end
 leakage4 = 0;
 for i = 1:3
@@ -101,8 +103,9 @@ end
 
 %% Phase 3: Tone response of laser
 % t = -5:0.01:5;          %time vector
-% w = 1e3;                %sin frequency and sqrt of resonance freq.
-% alpha = 1;
+w = 1e3;                %sqrt of resonance freq.
+f = 1e9;                %sin frequency
+alpha = 1;              %dampening rate
 % syms y(t)
 % Dy = diff(y);
 % ode = diff(y,t,2) == -alpha*Dy - w*y + sin(w*t);
