@@ -106,7 +106,7 @@ end
 
 
 %% Phase 3: Tone response of laser
-alpha_0 = [1 2 5] ;
+alpha = [1 2 5] ;
 w_o = [5 2 1];
 freq = 1*10^9;
 
@@ -124,7 +124,8 @@ VSol(t) = dsolve(ode,conds);
 VSol = simplify(VSol);
 VSolFun = matlabFunction(VSol);
 figure();
-fplot(VSolFun(t),[0,500]); title('Under Damped');
+fplot(VSolFun(t),[0,500]); 
+title('Under Damped');
 
 syms V(t)
 Vt = diff(V);
@@ -138,7 +139,8 @@ VSol(t) = dsolve(ode,conds);
 VSol = simplify(VSol);
 VSolFun = matlabFunction(VSol);
 figure();
-fplot(VSolFun(t),[0,500]); title('Critically Damped');
+fplot(VSolFun(t),[0,500]); 
+title('Critically Damped');
 
 syms V(t)
 Vt = diff(V);
@@ -153,40 +155,27 @@ VSol(t) = dsolve(ode,conds);
 VSol = simplify(VSol);
 VSolFun = matlabFunction(VSol);
 figure();
-fplot(VSolFun(t),[0,500]); title('Over Damped');
+fplot(VSolFun(t),[0,500]); 
+title('Over Damped');
 
 %% Phase 4: Gaussian beam propagation
-% lambda4 = 1e-6;
-% n = 1.6;        
-% w0 = 1e-3;                      % Waist size of Laser beam
-% z0 = (pi*(w0^2)*n)/lambda4;     % Rayleigh Range
-% z = 0.01:0.01:10;               % Distance
-% r =                             % Elevation Distance
-% w_z = (w0^2)*(1+(z/z0)^2);      % Radis ar which the field amp. and intensity drop to 1/e and 1/e^2 of axial values
-% I0 = 1;                         % Scaled Power Intensity
-% 
-% I = I0*((w0/w_z)^2)*exp(-2*((r/w_z)^2));
-
-z_vec=-600:1:600;
-lambda=1*10^-6;
-n=1.6;
-W0=1*10^-3;
-z0 = pi*W0^2/lambda;
+z_vec = 0:600;
+lambda4 = 1e6;
+n = 1.6;
+w0=1*10^-3;
+z0 = pi*w0^2/lambda;
 I0 =1;
-% W = @(z) (((W0^2).*(1+(z./z0).^2)).^0.5);
+
 legend_arg = [];
 figure();
-for CONST = 0:100:1500
-%     CONST =1;
-    R = @(z) ((0.5*(((W0^2).*(1+(z./z0).^2)).^0.5).^2).*(log(CONST*((((W0^2).*(1+(z./z0).^2)).^0.5).^2).*(W0^-2)))).^(0.5);
-    plot(R(z_vec));
+for constant = 100:100:1500
+
+    R = @(z) ((0.5*(((w0^2).*(1+(z./z0).^2)).^0.5).^2).*(log(constant*((((w0^2).*(1+(z./z0).^2)).^0.5).^2).*(w0^-2)))).^(0.5);
+    plot(z_vec, R(z_vec));
     hold on;
-%     legend_arg =legend_arg+[] ,num2str(CONST)];
-    
-    
 end
-title('R(z) for I(R,Z)=CONST');
-legend('0','100','200','300','400','500','600','700','800','900','1000','1100','1200','1300','1400','1500');
+title('R(z) for I(R,Z) = Constant');
+legend('100','200','300','400','500','600','700','800','900','1000','1100','1200','1300','1400','1500');
 
 
 
