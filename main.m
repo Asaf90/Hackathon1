@@ -27,6 +27,9 @@ P0 = (i_LED/q) * qe * h * (c/lambda);
 P = P0./(pi*(theta*L).^2);
 figure()
 plot(theta,P)
+title('Power density at distance of 1[km]')
+xlabel('\theta [rad]')
+ylabel('Power Density')
 % ylim([0 10000])
 % 3.	Draw the spectra bandwidth of LED as a function of temperature (250-330K),
 %       what is the ratio between the maximum and the minimum values
@@ -64,7 +67,7 @@ end
 figure()
 title('LED Spectral Distribution')
 hold on
-xlabel('\lambda [nm]')
+xlabel('\lambda [m]')
 ylabel('Spectral Density')
 for i = 1:4
     plot(wavelength_scale, LEDs(i,:))
@@ -83,7 +86,7 @@ leakage1 = 0;
 for i = 2:4
     p = cdf(pd(i), 2e-7:1e-9:4.81e-7);
     leakage1 = leakage1 + p(length(p));
-    %     leakage1 = leakage1 +trapz(LEDs(i,1:282));
+    
 end
 leakage2 = 0;
 for i = [1 3 4]
@@ -140,7 +143,7 @@ end
 % title('Tone response of laser')
 % end
 
-close all
+
 %% Phase 4: Gaussian beam propagation
 % lambda4 = 1e-6;
 % n = 1.6;        
@@ -191,16 +194,19 @@ Noise = Noise - cos(abs(angles(5,5)));
 SNIR = 1/Noise;
 
 %% Phase 7: Modulation
-t = 0:0.1:100;
+t = (0:0.1:100);
 w = 2*pi*8e12;
 phi = (0:(2*pi)/100:2*pi)';
 
 
 MachZender = cos(w*t) + cos(w*t + phi);
 figure()
+mesh(t,phi,MachZender)
+title('Mach-Zehnder modulator output as a function of phase')
+xlabel('Time [sec]')
+ylabel('Phase [rad]')
+zlabel('Modulator Amplitude')
 
-phi2 = 0:(2*pi)/1000:2*pi;
-mesh(MachZender)
 
 
 %% Phase 8: Optical amplifier
@@ -223,9 +229,13 @@ for i = 1:3
         Fn_Total_Atten(n,1) =  Fn_Total(n,1) + (Fn_Atten-1)/((GainAmp(4)));
     end
     plot(AmpNum,Fn_Total_Atten)
-    ylim([0 110])
+    
 end
 
+title('Noise Figure as a function of number of units')
+xlabel('Number of units (Amplifiers + Attenuator)')
+ylabel('Noise Figure')
+legend('Gain = 5dB', 'Gain = 10dB', 'Gain = 20dB')
 
 
 
