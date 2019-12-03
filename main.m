@@ -188,4 +188,29 @@ mesh(MachZender)
 
 %% Phase 8: Optical amplifier
 
+Gain_dB = [5 10 20 -10];
+GainAmp = 10.^(Gain_dB./10);
+n_sp = 5;
+AmpNum = 1:100;
+Fn_Total = zeros(length(AmpNum),1);
+Fn_Total_Atten = zeros(length(AmpNum),1);
+figure()
+hold on
+for i = 1:3
+    Fn = 2*((GainAmp(i)-1)*n_sp) / GainAmp(i);
+    Fn_Atten = 2*((GainAmp(4)-1)*n_sp) / GainAmp(4);
+    Fn_Total(1,1) = Fn;
+    for n = 1:length(AmpNum)
+        if (n == 1)
+            Fn_Total_Atten(n,1) =  Fn_Total(1,1) + (Fn_Atten-1)/((GainAmp(4)));
+            continue;
+        end
+        Fn_Total(n,1) = Fn_Total(n-1,1) + (Fn-1)/((GainAmp(i))^(n-1));
+        Fn_Total_Atten(n,1) =  Fn_Total(n,1) + (Fn_Atten-1)/((GainAmp(4)));
+    end
+    plot(AmpNum,Fn_Total_Atten)
+end
+
+
+
 
