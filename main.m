@@ -175,14 +175,14 @@ I0 =1;
 
 legend_arg = [];
 figure();
-for constant = 100:100:1500
+for constant = 100:400:1700
 
     R = @(z) ((0.5*(((w0^2).*(1+(z./z0).^2)).^0.5).^2).*(log(constant*((((w0^2).*(1+(z./z0).^2)).^0.5).^2).*(w0^-2)))).^(0.5);
     plot(z_vec, R(z_vec));
     hold on;
 end
 title('R(z) for I(R,Z) = Constant');
-legend('100','200','300','400','500','600','700','800','900','1000','1100','1200','1300','1400','1500');
+legend('100','500','900','1300','1700');
 xlabel('z [m]')
 ylabel('Constant ratio')
 
